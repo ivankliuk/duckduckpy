@@ -17,18 +17,18 @@ from duckduckpy.utils import camel_to_snake_case
 
 class TestHook(unittest.TestCase):
     def test_non_existent_hook(self):
-        self.assertIs(Hook(1), None)
+        self.assertTrue(Hook(1) is None)
 
     def test_non_existent_hook_verbose(self):
         self.assertRaises(exc.DuckDuckDeserializeError, Hook, 1, verbose=True)
 
     def test_hook_instance_returned(self):
         hook = Hook(Hook.containers[0])
-        self.assertIsInstance(hook, Hook)
+        self.assertTrue(isinstance(hook, Hook))
 
     def test_containers_exist(self):
-        self.assertIsInstance(Hook.containers, Iterable)
-        self.assertGreater(Hook.containers, 0)
+        self.assertTrue(isinstance(Hook.containers, Iterable))
+        self.assertTrue(Hook.containers > 0)
 
 
 class TestHookDictSerializer(unittest.TestCase):

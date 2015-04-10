@@ -10,6 +10,5 @@ def camel_to_snake_case(string):
 
     e.g.: CamelCase => snake_case
     """
-    # Implementation taken from http://stackoverflow.com/questions/1175208
     s = _1.sub(r'\1_\2', string)
     return _2.sub(r'\1_\2', s).lower()

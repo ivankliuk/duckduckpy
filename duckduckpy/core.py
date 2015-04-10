@@ -76,7 +76,7 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
     :return:
     """
 
-    params = {'q': query_string.encode(encoding='utf-8'), 'format': 'json'}
+    params = {'q': query_string.encode("utf-8"), 'format': 'json'}
 
     if no_redirect:
         params.update({'no_redirect': 1})

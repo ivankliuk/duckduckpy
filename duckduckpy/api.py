@@ -8,16 +8,16 @@ SERVER_HOST = 'api.duckduckgo.com'
 VERSION = '0.1-alpha'
 USER_AGENT = 'duckduckpy {0}'.format(VERSION)
 
-ICON_KEYS = {'URL', 'Width', 'Height'}
-RESULT_KEYS = {'FirstURL', 'Icon', 'Result', 'Text'}
-CONTENT_KEYS = {'data_type', 'label', 'sort_order', 'value', 'wiki_order'}
-META_KEYS = {'data_type', 'label', 'value'}
-INFOBOX_KEYS = {'content', 'meta'}
-RESPONSE_KEYS = {
+ICON_KEYS = set(['URL', 'Width', 'Height'])
+RESULT_KEYS = set(['FirstURL', 'Icon', 'Result', 'Text'])
+CONTENT_KEYS = set(['data_type', 'label', 'sort_order', 'value', 'wiki_order'])
+META_KEYS = set(['data_type', 'label', 'value'])
+INFOBOX_KEYS = set(['content', 'meta'])
+RESPONSE_KEYS = set([
     'Redirect', 'Definition', 'ImageWidth', 'Infobox', 'RelatedTopics',
     'ImageHeight', 'Heading', 'Answer', 'AbstractText', 'Type', 'ImageIsLogo',
     'DefinitionSource', 'AbstractURL', 'Abstract', 'DefinitionURL', 'Results',
-    'Entity', 'AnswerType', 'AbstractSource', 'Image'}
+    'Entity', 'AnswerType', 'AbstractSource', 'Image'])
 
 camel_to_snake_case_set = lambda seq: set(map(camel_to_snake_case, seq))
 Icon = namedtuple('Icon', camel_to_snake_case_set(ICON_KEYS))
