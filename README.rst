@@ -1,5 +1,5 @@
-.. image:: https://pypip.in/status/<duckduckpy>/badge.svg
-    :target: https://pypi.python.org/pypi/<duckduckpy>/
+.. image:: https://pypip.in/status/duckduckpy/badge.svg
+    :target: https://pypi.python.org/pypi/duckduckpy/
     :alt: Development Status
 .. image:: https://travis-ci.org/ivankliuk/duckduckpy.svg?branch=master
     :target: https://travis-ci.org/ivankliuk/duckduckpy
