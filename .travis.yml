@@ -1,8 +1,11 @@
 language: python
 python:
-  - "2.6"
-  - "2.7"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
-script: nosetests tests.py
+  - 2.6
+  - 2.7
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+script:
+  coverage run --source=duckduckpy setup.py test
+after_success:
+  coveralls
