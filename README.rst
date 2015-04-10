@@ -4,6 +4,10 @@
 .. image:: https://travis-ci.org/ivankliuk/duckduckpy.svg?branch=master
     :target: https://travis-ci.org/ivankliuk/duckduckpy
     :alt: CI Status
+.. image:: https://coveralls.io/repos/ivankliuk/duckduckpy/badge.svg?branch=master
+    :target: https://coveralls.io/r/ivankliuk/duckduckpy?branch=master
+    :alt: Coverage
+
 
 DuckDuckPy
 ==========
