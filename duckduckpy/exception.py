@@ -17,7 +17,7 @@ class DuckDuckConnectionError(DuckDuckException):
     pass
 
 
-class DuckDuckWrongArgumentError(DuckDuckException):
+class DuckDuckArgumentError(DuckDuckException):
     """Indicates that argument is wrong
     """
     pass

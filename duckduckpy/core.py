@@ -105,7 +105,7 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
     :return:
     """
     if container not in Hook.containers:
-        raise exc.DuckDuckWrongArgumentError(
+        raise exc.DuckDuckArgumentError(
             "Argument 'container' must be one of the values: "
             "{0}".format(', '.join(Hook.containers)))
 
