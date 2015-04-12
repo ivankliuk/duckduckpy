@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import unittest
 from collections import Iterable
 from io import StringIO
-
 import mock
 
 from duckduckpy.core import api
@@ -443,6 +442,19 @@ class TestQuery(unittest.TestCase):
                 return_value=StringIO("Not JSON"))
     def test_not_json_response(self, *args):
         self.assertRaises(exc.DuckDuckDeserializeError, query, 'anything!')
+
+
+class TestQueryExceptions(unittest.TestCase):
+    @mock.patch('httplib.HTTPConnection.getresponse',
+                side_effect=exc.DuckDuckArgumentError)
+    def test_argument_error(self, *args):
+        self.assertRaises(
+            exc.DuckDuckArgumentError, query, '', container='non-existent')
+
+    @mock.patch('httplib.HTTPConnection.getresponse',
+                side_effect=exc.DuckDuckConnectionError)
+    def test_connection_error(self, *args):
+        self.assertRaises(exc.DuckDuckConnectionError, query, 'anything!')
 
 
 if __name__ == '__main__':
