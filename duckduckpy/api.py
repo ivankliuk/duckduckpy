@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from __init__ import __version__
 from collections import namedtuple
-from utils import camel_to_snake_case
+from duckduckpy.utils import camel_to_snake_case
 
 SERVER_HOST = 'api.duckduckgo.com'
-VERSION = '0.1-alpha'
-USER_AGENT = 'duckduckpy {0}'.format(VERSION)
+USER_AGENT = 'duckduckpy {0}'.format(__version__)
 
 ICON_KEYS = set(['URL', 'Width', 'Height'])
 RESULT_KEYS = set(['FirstURL', 'Icon', 'Result', 'Text'])
