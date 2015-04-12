@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 from __init__ import __version__
 from collections import namedtuple
-from duckduckpy.utils import camel_to_snake_case
+from .utils import camel_to_snake_case
 
 SERVER_HOST = 'api.duckduckgo.com'
 USER_AGENT = 'duckduckpy {0}'.format(__version__)

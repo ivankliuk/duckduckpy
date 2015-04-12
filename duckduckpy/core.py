@@ -4,14 +4,15 @@
 # TODO SSL certificate checking
 
 from __future__ import unicode_literals
-import api
 import functools
 import httplib
 import json
 import socket
 import urllib
-import exception as exc
-from utils import camel_to_snake_case
+
+from . import api
+from . import exception as exc
+from .utils import camel_to_snake_case
 
 
 class Hook(object):
