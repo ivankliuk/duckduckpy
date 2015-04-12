@@ -411,14 +411,12 @@ class TestQuery(unittest.TestCase):
         'results': [],
         'type': 'D'}
 
-    @mock.patch('httplib.HTTPConnection.request')
     @mock.patch('httplib.HTTPConnection.getresponse',
                 return_value=StringIO(origin))
     def test_smoke_dict(self, *args):
         resp = query('python', container='dict')
         self.assertEqual(resp, self.response)
 
-    @mock.patch('httplib.HTTPConnection.request')
     @mock.patch('httplib.HTTPConnection.getresponse',
                 return_value=StringIO(origin))
     def test_smoke_namedtuple(self, *args):
@@ -435,14 +433,12 @@ class TestQuery(unittest.TestCase):
         resp = query('python')
         self.assertEqual(resp, expected)
 
-    @mock.patch('httplib.HTTPConnection.request')
     @mock.patch('httplib.HTTPConnection.getresponse',
                 return_value=StringIO("[1, \"x\", true]"))
     def test_json_response_as_list(self, *args):
         res = query('anything!')
         self.assertEqual(res, [1, 'x', True])
 
-    @mock.patch('httplib.HTTPConnection.request')
     @mock.patch('httplib.HTTPConnection.getresponse',
                 return_value=StringIO("Not JSON"))
     def test_not_json_response(self, *args):
