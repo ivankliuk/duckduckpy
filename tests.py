@@ -19,9 +19,6 @@ class TestHook(unittest.TestCase):
     def test_non_existent_hook(self):
         self.assertTrue(Hook(1) is None)
 
-    def test_non_existent_hook_verbose(self):
-        self.assertRaises(exc.DuckDuckDeserializeError, Hook, 1, verbose=True)
-
     def test_hook_instance_returned(self):
         hook = Hook(Hook.containers[0])
         self.assertTrue(isinstance(hook, Hook))
@@ -29,6 +26,35 @@ class TestHook(unittest.TestCase):
     def test_containers_exist(self):
         self.assertTrue(isinstance(Hook.containers, Iterable))
         self.assertTrue(Hook.containers > 0)
+
+    def test_no_object_found(self):
+        obj = {
+            'URL': 'www.test.url.com',
+            'SomeThing': 'icon',
+            'Result': 20,
+            'Text': 'Example of a text'}
+        expected = {
+            'URL': 'www.test.url.com',
+            'SomeThing': 'icon',
+            'Result': 20,
+            'Text': 'Example of a text'}
+        hook = Hook('dict')
+        actual_dict = hook(obj)
+        self.assertEqual(actual_dict, expected)
+
+
+class TestHookExceptions(unittest.TestCase):
+    def test_non_existent_hook_verbose(self):
+        self.assertRaises(exc.DuckDuckDeserializeError, Hook, 1, verbose=True)
+
+    def test_no_object_found_verbose(self):
+        obj = {
+            'URL': 'www.test.url.com',
+            'SomeThing': 'icon',
+            'Result': 20,
+            'Text': 'Example of a text'}
+        hook = Hook('dict', verbose=True)
+        self.assertRaises(exc.DuckDuckDeserializeError, hook, obj)
 
 
 class TestHookDictSerializer(unittest.TestCase):
