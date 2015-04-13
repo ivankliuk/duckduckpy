@@ -10,6 +10,7 @@ import socket
 from duckduckpy.core import api
 from duckduckpy.core import Hook
 from duckduckpy.core import query
+from duckduckpy.core import secure_query
 from duckduckpy.core import url_assembler
 import duckduckpy.exception as exc
 from duckduckpy.utils import camel_to_snake_case
@@ -437,6 +438,12 @@ class TestQuery(unittest.TestCase):
         'results': [],
         'type': 'D'}
 
+    @mock.patch('json.loads')
+    @mock.patch('httplib.HTTPConnection')
+    def test_http_connection_used(self, conn, *args):
+        query('anything', secure=False)
+        conn.assert_called_once_with(api.SERVER_HOST)
+
     @mock.patch('httplib.HTTPConnection.getresponse',
                 return_value=StringIO(origin))
     def test_smoke_dict(self, *args):
@@ -469,6 +476,20 @@ class TestQuery(unittest.TestCase):
                 return_value=StringIO("Not JSON"))
     def test_not_json_response(self, *args):
         self.assertRaises(exc.DuckDuckDeserializeError, query, 'anything!')
+
+
+class TestSecureQuery(unittest.TestCase):
+    @mock.patch('json.loads')
+    @mock.patch('httplib.HTTPSConnection')
+    def test_https_connection_used(self, conn, *args):
+        query('anything', secure=True)
+        conn.assert_called_once_with(api.SERVER_HOST)
+
+    @mock.patch('json.loads')
+    @mock.patch('httplib.HTTPSConnection')
+    def test_shortcut_https_connection_used(self, conn, *args):
+        secure_query('anything', secure=True)
+        conn.assert_called_once_with(api.SERVER_HOST)
 
 
 class TestQueryExceptions(unittest.TestCase):
