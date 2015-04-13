@@ -5,6 +5,7 @@ import unittest
 from collections import Iterable
 from io import StringIO
 import mock
+import socket
 
 from duckduckpy.core import api
 from duckduckpy.core import Hook
@@ -452,7 +453,7 @@ class TestQueryExceptions(unittest.TestCase):
             exc.DuckDuckArgumentError, query, '', container='non-existent')
 
     @mock.patch('httplib.HTTPConnection.getresponse',
-                side_effect=exc.DuckDuckConnectionError)
+                side_effect=socket.gaierror)
     def test_connection_error(self, *args):
         self.assertRaises(exc.DuckDuckConnectionError, query, 'anything!')
 
