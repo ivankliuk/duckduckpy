@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# TODO Python3 support
-# TODO Add docstrings
-# TODO SSL certificate checking
 
 from __future__ import unicode_literals
 import functools

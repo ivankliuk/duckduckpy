@@ -24,3 +24,10 @@ Features
 * Unit test coverage 100%
 * SSL and unicode support
 * Licensed under MIT license
+
+TODO
+----
+
+* Python3 support
+* Docstrings
+* SSL certificate checking
