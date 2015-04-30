@@ -332,6 +332,7 @@ class TestURLAssembler(unittest.TestCase):
         self.assertEqual(url, expected)
 
 
+@mock.patch('httplib.HTTPConnection.request')
 class TestQuery(unittest.TestCase):
     origin = """{
    \"DefinitionSource\" : \"\",
