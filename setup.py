@@ -7,12 +7,11 @@ with open('README.rst', 'r') as f:
 setup(name='duckduckpy',
       version=duckduckpy.__version__,
       packages=['duckduckpy'],
-      description=('Library for querying the instant answer API '
-                   'of DuckDuckGo search engine'),
+      description=duckduckpy.__doc__,
       author=duckduckpy.__author__,
-      author_email='ivan.kliuk@gmail.com',
-      license='MIT',
-      url='https://github.com/ivankliuk/duckduckpy/',
+      author_email=duckduckpy.__email__,
+      license=duckduckpy.__license__,
+      url=duckduckpy.__url__,
       long_description=long_description,
       platforms=['any'],
       classifiers=[
@@ -26,4 +25,4 @@ setup(name='duckduckpy',
           'Programming Language :: Python :: 2.7',
           "Topic :: Internet :: WWW/HTTP :: Indexing/Search"],
       zip_safe=True,
-      test_suite = "tests")
+      test_suite="tests")
