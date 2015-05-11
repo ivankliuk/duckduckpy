@@ -92,7 +92,7 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
 def query(query_string, secure=False, container='namedtuple', verbose=False,
           user_agent=api.USER_AGENT, no_redirect=False, no_html=False,
           skip_disambig=False):
-    """Generate and sends a query to DuckDuckGo API.
+    """Generates and sends a query to DuckDuckGo API.
 
     Args:
         query_string: Query to be passed to DuckDuckGo API.
