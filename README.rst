@@ -43,6 +43,7 @@ API description
     query(query_string, secure=False, container=u'namedtuple', verbose=False,
           user_agent=u'duckduckpy 0.1', no_redirect=False, no_html=False,
           skip_disambig=False)
+
         Generates and sends a query to DuckDuckGo API.
 
         Args:
