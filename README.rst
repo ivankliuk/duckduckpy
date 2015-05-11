@@ -29,5 +29,4 @@ TODO
 ----
 
 * Python3 support
-* Docstrings
 * SSL certificate checking

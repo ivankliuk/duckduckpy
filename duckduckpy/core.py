@@ -13,7 +13,7 @@ from .utils import camel_to_snake_case
 
 
 class Hook(object):
-    """A hook for dict-objects serialization"""
+    """A hook for dict-objects serialization."""
     containers = ['namedtuple', 'dict']
 
     def __new__(cls, container, verbose=False):
@@ -65,13 +65,16 @@ class Hook(object):
 
 
 def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
-    """Assembler of parameters for building request query
+    """Assembler of parameters for building request query.
 
-    :param query_string:
-    :param no_redirect:
-    :param no_html:
-    :param skip_disambig:
-    :return:
+    Args:
+        query_string: Query to be passed to DuckDuckGo API.
+        no_redirect: Skip HTTP redirects (for !bang commands). Default - False.
+        no_html: Remove HTML from text, e.g. bold and italics. Default - False.
+        skip_disambig: Skip disambiguation (D) Type. Default - False.
+
+    Returns:
+        A “percent-encoded” string which is used as a part of the query.
     """
 
     params = {'q': query_string.encode("utf-8"), 'format': 'json'}
@@ -89,17 +92,60 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
 def query(query_string, secure=False, container='namedtuple', verbose=False,
           user_agent=api.USER_AGENT, no_redirect=False, no_html=False,
           skip_disambig=False):
-    """
+    """Generate and sends a query to DuckDuckGo API.
 
-    :param query_string:
-    :param secure:
-    :param container:
-    :param verbose:
-    :param user_agent:
-    :param no_redirect:
-    :param no_html:
-    :param skip_disambig:
-    :return:
+    Args:
+        query_string: Query to be passed to DuckDuckGo API.
+        secure: Use secure SSL/TLS connection. Default - False.
+            Syntactic sugar is secure_query function which is passed the same
+            parameters.
+        container: Indicates how dict-like objects are serialized. There are
+           two possible options: namedtuple and dict. If 'namedtuple' is passed
+           the objects will be serialized to namedtuple instance of certain
+           class. If 'dict' is passed the objects won't be deserialized.
+           Default value: 'namedtuple'.
+        verbose: Don't raise any exception if error occurs.
+            Default value: False.
+        user_agent: User-Agent header of HTTP requests to DuckDuckGo API.
+            Default value: 'duckduckpy 0.1'
+        no_redirect: Skip HTTP redirects (for !bang commands).
+            Default value: False.
+        no_html: Remove HTML from text, e.g. bold and italics.
+            Default value: False.
+        skip_disambig: Skip disambiguation (D) Type. Default value: False.
+
+    Raises:
+        DuckDuckDeserializeError: JSON serialization failed.
+        DuckDuckConnectionError: Something went wrong with httplib operation.
+        DuckDuckArgumentError: Passed argument is wrong.
+
+    Returns:
+        Container depends on container parameter. Each field in the response is
+        converted to the so-called snake case.
+
+    Usage:
+        >>> import duckduckpy
+        >>># Namedtuple is used as a container:
+        >>> response = duckduckpy.query('Python')
+        >>> response
+        Response(redirect=u'', definition=u'', image_width=0, ...}
+        >>> type(response)
+        <class 'duckduckpy.api.Response'>
+        >>> response.related_topics[0]
+        Result(first_url=u'https://duckduckgo.com/Python', text=...)
+        >>> type(response.related_topics[0])
+        <class 'duckduckpy.api.Result'>
+
+        >>># Dict is used as a container:
+        >>> response = duckduckpy.query('Python', container='dict')
+        >>> type(response)
+        <type 'dict'>
+        >>> response
+        {u'abstract': u'', u'results': [], u'image_is_logo': 0, ...}
+        >>> type(response['related_topics'][0])
+        <type 'dict'>
+        >>> response['related_topics'][0]
+        {u'first_url': u'https://duckduckgo.com/Python', u'text': ...}
     """
     if container not in Hook.containers:
         raise exc.DuckDuckArgumentError(
