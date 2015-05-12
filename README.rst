@@ -19,17 +19,35 @@ Features
 Installation
 ------------
 
-Latest stable version:
+You can install DuckDuckPy either via the `Python Package Index (PyPI) <http://pypi.python.org/pypi>`_ or
+from source.
+
+To install using ``pip``:
 
 .. code:: bash
 
-    $ [sudo] pip install duckduckpy
+    $ pip install duckduckpy
 
-Latest upstream version:
+To install using ``easy_install``:
 
 .. code:: bash
 
-    $ [sudo] pip install git+https://github.com/ivankliuk/duckduckpy.git
+    $ easy_install duckduckpy
+
+To install from sources you can download the latest version of DuckDuckPy
+either from `PyPI <http://pypi.python.org/pypi/duckduckpy/0.1>`_ or
+`GitHub <https://github.com/ivankliuk/duckduckpy/tarball/0.1>`_, extract archive contents and
+run following command from the source directory:
+
+.. code:: bash
+
+    $ python setup.py install
+
+Latest upstream version can be installed directly from the git repository:
+
+.. code:: bash
+
+    $ pip install git+https://github.com/ivankliuk/duckduckpy.git
 
 API description
 ---------------
