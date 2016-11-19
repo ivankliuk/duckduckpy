@@ -51,9 +51,10 @@ class Hook(object):
         self._verbose = verbose
 
     def _camel_to_snake_case(self):
-        for key in self.dict_object:
-            self.dict_object[
-                camel_to_snake_case(key)] = self.dict_object.pop(key)
+        keys = set(self.dict_object.keys())
+        for key in keys:
+            val = self.dict_object.pop(key)
+            self.dict_object[camel_to_snake_case(key)] = val
 
     def serialize(self, class_name):
         self._camel_to_snake_case()
