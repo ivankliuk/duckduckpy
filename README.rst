@@ -11,7 +11,7 @@ Features
 --------
 
 * Uses standard library only
-* Works on Python 2.6 and 2.7
+* Works on Python 2.6+ and 3.3+
 * Unit test coverage 100%
 * SSL and unicode support
 * Licensed under MIT license
@@ -35,8 +35,8 @@ To install using ``easy_install``:
     $ easy_install duckduckpy
 
 To install from sources you can download the latest version of DuckDuckPy
-either from `PyPI <http://pypi.python.org/pypi/duckduckpy/0.1>`_ or
-`GitHub <https://github.com/ivankliuk/duckduckpy/tarball/0.1>`_, extract archive contents and
+either from `PyPI <http://pypi.python.org/pypi/duckduckpy/0.2>`_ or
+`GitHub <https://github.com/ivankliuk/duckduckpy/tarball/0.2>`_, extract archive contents and
 run following command from the source directory:
 
 .. code:: bash
@@ -55,7 +55,7 @@ API description
 .. code-block:: python
 
     query(query_string, secure=False, container=u'namedtuple', verbose=False,
-          user_agent=u'duckduckpy 0.1', no_redirect=False, no_html=False,
+          user_agent=u'duckduckpy 0.2', no_redirect=False, no_html=False,
           skip_disambig=False)
 
 Generates and sends a query to DuckDuckGo API.
@@ -79,7 +79,7 @@ Generates and sends a query to DuckDuckGo API.
 |               | Default value: False.                                       |
 +---------------+-------------------------------------------------------------+
 | user_agent    | User-Agent header of HTTP requests to DuckDuckGo API.       |
-|               | Default value: 'duckduckpy 0.1'                             |
+|               | Default value: 'duckduckpy 0.2'                             |
 +---------------+-------------------------------------------------------------+
 | no_redirect   | Skip HTTP redirects (for !bang commands).                   |
 |               | Default value: False.                                       |
@@ -130,12 +130,6 @@ Usage
     <type 'dict'>
     >>> response['related_topics'][0]
     {u'first_url': u'https://duckduckgo.com/Python', u'text': ...}
-
-TODO
-----
-
-* Python 3 support
-* SSL certificate checking
 
 .. |package| image:: https://badge.fury.io/py/duckduckpy.svg
     :target: http://badge.fury.io/py/duckduckpy

@@ -138,7 +138,7 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
         verbose: Don't raise any exception if error occurs.
             Default value: False.
         user_agent: User-Agent header of HTTP requests to DuckDuckGo API.
-            Default value: 'duckduckpy 0.1'
+            Default value: 'duckduckpy 0.2'
         no_redirect: Skip HTTP redirects (for !bang commands).
             Default value: False.
         no_html: Remove HTML from text, e.g. bold and italics.
