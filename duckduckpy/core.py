@@ -22,15 +22,24 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import functools
-import httplib
-import json
-import socket
-import urllib
 
 from . import api
 from . import exception as exc
 from .utils import camel_to_snake_case
+from .utils import is_python2
+from .utils import decoder
+
+import functools
+import json
+import socket
+
+# Python 2/3 compatibility.
+if is_python2():
+    import httplib as http_client
+    from urllib import urlencode
+else:
+    import http.client as http_client
+    from urllib.parse import urlencode
 
 
 class Hook(object):
@@ -67,20 +76,20 @@ class Hook(object):
     def __call__(self, dict_object):
         keys = set(dict_object.keys())
         self.dict_object = dict_object
+        if not keys:
+            return {}
         if keys == api.ICON_KEYS:
             return self.serialize('Icon')
         elif keys == api.RESULT_KEYS:
             return self.serialize('Result')
-        elif keys == api.CONTENT_KEYS:
-            return self.serialize('Content')
-        elif keys == api.META_KEYS:
-            return self.serialize('Meta')
-        elif keys == api.INFOBOX_KEYS:
-            return self.serialize('Infobox')
+        elif keys == api.RELATED_TOPIC_KEYS:
+            return self.serialize('RelatedTopic')
         elif keys == api.RESPONSE_KEYS:
             return self.serialize('Response')
 
-        if not self._verbose:
+        # Leave 'meta' object as is.
+        uppercase_keys = list(filter(lambda k: k[0].isupper(), keys))
+        if not self._verbose or not uppercase_keys:
             return dict_object
         raise exc.DuckDuckDeserializeError(
             "Unable to deserialize dict to an object")
@@ -98,17 +107,16 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
     Returns:
         A “percent-encoded” string which is used as a part of the query.
     """
-
-    params = {'q': query_string.encode("utf-8"), 'format': 'json'}
+    params = [('q', query_string.encode("utf-8")), ('format', 'json')]
 
     if no_redirect:
-        params.update({'no_redirect': 1})
+        params.append(('no_redirect', 1))
     if no_html:
-        params.update({'no_html': 1})
+        params.append(('no_html', 1))
     if skip_disambig:
-        params.update({'skip_disambig': 1})
+        params.append(('skip_disambig', 1))
 
-    return '/?' + urllib.urlencode(params)
+    return '/?' + urlencode(params)
 
 
 def query(query_string, secure=False, container='namedtuple', verbose=False,
@@ -139,7 +147,7 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
 
     Raises:
         DuckDuckDeserializeError: JSON serialization failed.
-        DuckDuckConnectionError: Something went wrong with httplib operation.
+        DuckDuckConnectionError: Something went wrong with client operation.
         DuckDuckArgumentError: Passed argument is wrong.
 
     Returns:
@@ -183,14 +191,14 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
         skip_disambig=skip_disambig)
 
     if secure:
-        conn = httplib.HTTPSConnection(api.SERVER_HOST)
+        conn = http_client.HTTPSConnection(api.SERVER_HOST)
     else:
-        conn = httplib.HTTPConnection(api.SERVER_HOST)
+        conn = http_client.HTTPConnection(api.SERVER_HOST)
 
     try:
         conn.request("GET", url, "", headers)
         resp = conn.getresponse()
-        data = resp.read()
+        data = decoder(resp.read())
     except socket.gaierror as e:
         raise exc.DuckDuckConnectionError(e.strerror)
     finally:

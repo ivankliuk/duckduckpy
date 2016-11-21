@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # The MIT License (MIT)
 # Copyright (c) 2015 Ivan Kliuk
 #
@@ -19,11 +21,18 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-import re
+from __future__ import unicode_literals
 
+import re
+import sys
 
 _1 = re.compile(r'(.)([A-Z][a-z]+)')
 _2 = re.compile('([a-z0-9])([A-Z])')
+
+
+def is_python2():
+    """Checks whether Python major version is 2."""
+    return sys.version_info[0] == 2
 
 
 def camel_to_snake_case(string):
@@ -33,3 +42,15 @@ def camel_to_snake_case(string):
     """
     s = _1.sub(r'\1_\2', string)
     return _2.sub(r'\1_\2', s).lower()
+
+
+def camel_to_snake_case_set(seq):
+    """Converts sequence to the snake case and returns the result as set."""
+    return set(map(camel_to_snake_case, seq))
+
+
+def decoder(obj):
+    """Decodes 'bytes' object to UTF-8."""
+    if isinstance(obj, bytes):
+        return obj.decode("utf-8")
+    return obj

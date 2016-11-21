@@ -14,6 +14,7 @@ from duckduckpy.core import secure_query
 from duckduckpy.core import url_assembler
 import duckduckpy.exception as exc
 from duckduckpy.utils import camel_to_snake_case
+from duckduckpy.utils import is_python2
 
 
 class TestHook(unittest.TestCase):
@@ -26,7 +27,7 @@ class TestHook(unittest.TestCase):
 
     def test_containers_exist(self):
         self.assertTrue(isinstance(Hook.containers, Iterable))
-        self.assertTrue(Hook.containers > 0)
+        self.assertTrue(len(Hook.containers) > 0)
 
     def test_no_object_found(self):
         obj = {
@@ -104,82 +105,154 @@ class TestURLAssembler(unittest.TestCase):
         self.assertEqual(url, expected)
 
     def test_no_redirect(self):
-        expected = "/?q=test+query&no_redirect=1&format=json"
+        expected = "/?q=test+query&format=json&no_redirect=1"
         url = url_assembler("test query", no_redirect=True)
         self.assertEqual(url, expected)
 
     def test_no_html(self):
-        expected = "/?q=test+query&no_html=1&format=json"
+        expected = "/?q=test+query&format=json&no_html=1"
         url = url_assembler("test query", no_html=True)
         self.assertEqual(url, expected)
 
     def test_skip_disambig(self):
-        expected = "/?q=test+query&skip_disambig=1&format=json"
+        expected = "/?q=test+query&format=json&skip_disambig=1"
         url = url_assembler("test query", skip_disambig=True)
         self.assertEqual(url, expected)
 
     def test_all_options_are_on(self):
-        expected = ("/?q=test+query&no_html=1&"
-                    "no_redirect=1&skip_disambig=1&format=json")
+        expected = ("/?q=test+query&format=json&no_redirect=1"
+                    "&no_html=1&skip_disambig=1")
         url = url_assembler("test query",
                             no_redirect=True, no_html=True, skip_disambig=True)
         self.assertEqual(url, expected)
 
 
-@mock.patch('httplib.HTTPConnection.request')
+@mock.patch('duckduckpy.core.http_client.HTTPConnection.request')
 class TestQuery(unittest.TestCase):
-    origin = """{
-   \"DefinitionSource\" : \"\",
-   \"Heading\" : \"Python\",
-   \"ImageWidth\" : 0,
-   \"RelatedTopics\" : [
-      {
-         \"Result\" : \"<a href=\\"https://duckduckgo.com/Python_(programmin\",
-         \"Icon\" : {
-            \"URL\" : \"https://duckduckgo.com/i/7eec482b.png\",
-            \"Height\" : \"\",
-            \"Width\" : \"\"
-         },
-         \"FirstURL\" : \"https://duckduckgo.com/Python_(programming\",
-         \"Text\" : \"Python (programming language)A widely used general\"
+    origin = r"""
+{
+  "Abstract": "",
+  "AbstractSource": "Wikipedia",
+  "AbstractText": "",
+  "AbstractURL": "https://en.wikipedia.org/wiki/Python",
+  "Answer": "",
+  "AnswerType": "",
+  "Definition": "",
+  "DefinitionSource": "",
+  "DefinitionURL": "",
+  "Entity": "",
+  "Heading": "Python",
+  "Image": "",
+  "ImageHeight": 0,
+  "ImageIsLogo": 0,
+  "ImageWidth": 0,
+  "Infobox": {},
+  "Redirect": "",
+  "RelatedTopics": [
+    {
+      "FirstURL": "https://duckduckgo.com/Python_(programming",
+      "Icon": {
+        "Height": "",
+        "URL": "https://duckduckgo.com/i/7eec482b.png",
+        "Width": ""
       },
-      {
-         \"Result\" : \"<a href=\\"https://duckduckgo.com/Monty_Python\\">Mo\",
-         \"Icon\" : {
-            \"URL\" : \"https://duckduckgo.com/i/4eec9e83.jpg\",
-            \"Height\" : \"\",
-            \"Width\" : \"\"
-         },
-         \"FirstURL\" : \"https://duckduckgo.com/Monty_Python\",
-         \"Text\" : \"Monty PythonA British surreal comedy group who\"
+      "Result": "<a href=\"https://duckduckgo.com/Python_(programmin",
+      "Text": "Python (programming language)A widely used general"
+    },
+    {
+      "FirstURL": "https://duckduckgo.com/Monty_Python",
+      "Icon": {
+        "Height": "",
+        "URL": "https://duckduckgo.com/i/4eec9e83.jpg",
+        "Width": ""
       },
+      "Result": "<a href=\"https://duckduckgo.com/Monty_Python\">Mo",
+      "Text": "Monty PythonA British surreal comedy group who"
+    },
+    {
+      "Name": "Ancient Greece",
+      "Topics": [
+        {
+          "FirstURL": "https://duckduckgo.com/Python_(programming",
+          "Icon": {
+            "Height": "",
+            "URL": "https://duckduckgo.com/i/7eec482b.png",
+            "Width": ""
+          },
+          "Result": "<a href=\"https://duckduckgo.com/Python_(programmin",
+          "Text": "Python (programming language)A widely used general"
+        },
+        {
+          "FirstURL": "https://duckduckgo.com/Monty_Python",
+          "Icon": {
+            "Height": "",
+            "URL": "https://duckduckgo.com/i/4eec9e83.jpg",
+            "Width": ""
+          },
+          "Result": "<a href=\"https://duckduckgo.com/Monty_Python\">Mo",
+          "Text": "Monty PythonA British surreal comedy group who"
+        }
+      ]
+    }
+  ],
+  "Results": [],
+  "Type": "D",
+  "meta": {
+    "attribution": null,
+    "blockgroup": null,
+    "created_date": null,
+    "description": "Wikipedia",
+    "designer": null,
+    "dev_date": null,
+    "dev_milestone": "live",
+    "developer": [
       {
-         \"Result\" : \"<a href=\\"https://duckduckgo.com/Colt_Python\\">Co\",
-         \"Icon\" : {
-            \"URL\" : \"https://duckduckgo.com/i/7e29c05b.jpg\",
-            \"Height\" : \"\",
-            \"Width\" : \"\"
-         },
-         \"FirstURL\" : \"https://duckduckgo.com/Colt_Python\",
-         \"Text\" : \"Colt PythonA.357 Magnum caliber revolver formerly\"
+        "name": "DDG Team",
+        "type": "ddg",
+        "url": "http://www.duckduckhack.com"
       }
-   ],
-   \"Entity\" : \"\",
-   \"Type\" : \"D\",
-   \"Redirect\" : \"\",
-   \"DefinitionURL\" : \"\",
-   \"AbstractURL\" : \"https://en.wikipedia.org/wiki/Python\",
-   \"Definition\" : \"\",
-   \"AbstractSource\" : \"Wikipedia\",
-   \"Infobox\" : \"\",
-   \"Image\" : \"\",
-   \"ImageIsLogo\" : 0,
-   \"Abstract\" : \"\",
-   \"AbstractText\" : \"\",
-   \"AnswerType\" : \"\",
-   \"ImageHeight\" : 0,
-   \"Results\" : [],
-   \"Answer\" : \"\"
+    ],
+    "example_query": "nikola tesla",
+    "id": "wikipedia_fathead",
+    "is_stackexchange": null,
+    "js_callback_name": "wikipedia",
+    "live_date": null,
+    "maintainer": {
+      "github": "duckduckgo"
+    },
+    "name": "Wikipedia",
+    "perl_module": "DDG::Fathead::Wikipedia",
+    "producer": null,
+    "production_state": "online",
+    "repo": "fathead",
+    "signal_from": "wikipedia_fathead",
+    "src_domain": "en.wikipedia.org",
+    "src_id": 1,
+    "src_name": "Wikipedia",
+    "src_options": {
+      "directory": "",
+      "is_fanon": 0,
+      "is_mediawiki": 1,
+      "is_wikipedia": 1,
+      "language": "en",
+      "min_abstract_length": "20",
+      "skip_abstract": 0,
+      "skip_abstract_paren": 0,
+      "skip_end": "0",
+      "skip_icon": 0,
+      "skip_image_name": 0,
+      "skip_qr": "",
+      "source_skip": "",
+      "src_info": ""
+    },
+    "src_url": null,
+    "status": "live",
+    "tab": "About",
+    "topic": [
+      "productivity"
+    ],
+    "unsafe": 0
+  }
 }"""
     icon1 = {'height': '',
              'url': 'https://duckduckgo.com/i/7eec482b.png',
@@ -187,10 +260,6 @@ class TestQuery(unittest.TestCase):
 
     icon2 = {'height': '',
              'url': 'https://duckduckgo.com/i/4eec9e83.jpg',
-             'width': ''}
-
-    icon3 = {'height': '',
-             'url': 'https://duckduckgo.com/i/7e29c05b.jpg',
              'width': ''}
 
     result1 = {
@@ -205,12 +274,67 @@ class TestQuery(unittest.TestCase):
         'result': '<a href="https://duckduckgo.com/Monty_Python">Mo',
         'text': "Monty PythonA British surreal comedy group who"}
 
-    result3 = {
-        'first_url': 'https://duckduckgo.com/Colt_Python',
-        'icon': icon3,
-        'result': '<a href="https://duckduckgo.com/Colt_Python">Co',
-        'text': "Colt PythonA.357 Magnum caliber revolver formerly"}
+    related_topic = {
+        'name': "Ancient Greece",
+        'topics': []
+    }
 
+    meta = {
+        "attribution": None,
+        "blockgroup": None,
+        "created_date": None,
+        "description": "Wikipedia",
+        "designer": None,
+        "dev_date": None,
+        "dev_milestone": "live",
+        "developer": [
+            {
+                "name": "DDG Team",
+                "type": "ddg",
+                "url": "http://www.duckduckhack.com"
+            }
+        ],
+        "example_query": "nikola tesla",
+        "id": "wikipedia_fathead",
+        "is_stackexchange": None,
+        "js_callback_name": "wikipedia",
+        "live_date": None,
+        "maintainer": {
+            "github": "duckduckgo"
+        },
+        "name": "Wikipedia",
+        "perl_module": "DDG::Fathead::Wikipedia",
+        "producer": None,
+        "production_state": "online",
+        "repo": "fathead",
+        "signal_from": "wikipedia_fathead",
+        "src_domain": "en.wikipedia.org",
+        "src_id": 1,
+        "src_name": "Wikipedia",
+        "src_options": {
+            "directory": "",
+            "is_fanon": 0,
+            "is_mediawiki": 1,
+            "is_wikipedia": 1,
+            "language": "en",
+            "min_abstract_length": "20",
+            "skip_abstract": 0,
+            "skip_abstract_paren": 0,
+            "skip_end": "0",
+            "skip_icon": 0,
+            "skip_image_name": 0,
+            "skip_qr": "",
+            "source_skip": "",
+            "src_info": ""
+        },
+        "src_url": None,
+        "status": "live",
+        "tab": "About",
+        "topic": [
+            "productivity"
+        ],
+        "unsafe": 0
+    }
     response = {
         'abstract': '',
         'abstract_source': 'Wikipedia',
@@ -227,47 +351,61 @@ class TestQuery(unittest.TestCase):
         'image_height': 0,
         'image_is_logo': 0,
         'image_width': 0,
-        'infobox': '',
+        'infobox': {},
         'redirect': '',
-        'related_topics': [result1, result2, result3],
+        'related_topics': [],
         'results': [],
-        'type': 'D'}
+        'type': 'D',
+        'meta': meta}
 
     @mock.patch('json.loads')
-    @mock.patch('httplib.HTTPConnection')
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection')
     def test_http_connection_used(self, conn, *args):
         query('anything', secure=False)
         conn.assert_called_once_with(api.SERVER_HOST)
 
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 return_value=StringIO(origin))
     def test_smoke_dict(self, *args):
+        self.related_topic['topics'] = [self.result1, self.result2]
+        self.response['related_topics'] = [
+            self.result1, self.result2, self.related_topic]
         resp = query('python', container='dict')
-        self.assertEqual(resp, self.response)
+        self.assertTrue(resp == self.response)
 
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 return_value=StringIO(origin))
     def test_smoke_namedtuple(self, *args):
         self.result1['icon'] = api.Icon(**self.icon1)
         self.result2['icon'] = api.Icon(**self.icon2)
-        self.result3['icon'] = api.Icon(**self.icon3)
+
+        self.related_topic['topics'] = [
+            api.Result(**self.result1),
+            api.Result(**self.result2)]
 
         self.response['related_topics'] = [
             api.Result(**self.result1),
             api.Result(**self.result2),
-            api.Result(**self.result3)]
+            api.RelatedTopic(**self.related_topic)]
 
         expected = api.Response(**self.response)
         resp = query('python')
         self.assertEqual(resp, expected)
 
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
+                return_value=mock.Mock(read=lambda: b"{}"))
+    def test_python3_utf8_decode(self, *args):
+        # Not relevant to Python 2.
+        if not is_python2():
+            query('python', container='dict')
+
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 return_value=StringIO("[1, \"x\", true]"))
     def test_json_response_as_list(self, *args):
         res = query('anything!')
         self.assertEqual(res, [1, 'x', True])
 
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 return_value=StringIO("Not JSON"))
     def test_not_json_response(self, *args):
         self.assertRaises(exc.DuckDuckDeserializeError, query, 'anything!')
@@ -275,26 +413,26 @@ class TestQuery(unittest.TestCase):
 
 class TestSecureQuery(unittest.TestCase):
     @mock.patch('json.loads')
-    @mock.patch('httplib.HTTPSConnection')
+    @mock.patch('duckduckpy.core.http_client.HTTPSConnection')
     def test_https_connection_used(self, conn, *args):
         query('anything', secure=True)
         conn.assert_called_once_with(api.SERVER_HOST)
 
     @mock.patch('json.loads')
-    @mock.patch('httplib.HTTPSConnection')
+    @mock.patch('duckduckpy.core.http_client.HTTPSConnection')
     def test_shortcut_https_connection_used(self, conn, *args):
         secure_query('anything', secure=True)
         conn.assert_called_once_with(api.SERVER_HOST)
 
 
 class TestQueryExceptions(unittest.TestCase):
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 side_effect=exc.DuckDuckArgumentError)
     def test_argument_error(self, *args):
         self.assertRaises(
             exc.DuckDuckArgumentError, query, '', container='non-existent')
 
-    @mock.patch('httplib.HTTPConnection.getresponse',
+    @mock.patch('duckduckpy.core.http_client.HTTPConnection.getresponse',
                 side_effect=socket.gaierror)
     def test_connection_error(self, *args):
         self.assertRaises(exc.DuckDuckConnectionError, query, 'anything!')
