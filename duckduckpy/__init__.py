@@ -2,7 +2,7 @@
 
 """Library for querying the instant answer API of DuckDuckGo search engine."""
 
-__version__ = 0.1
+__version__ = 0.2
 __author__ = 'Ivan Kliuk'
 __email__ = 'ivan.kliuk@gmail.com'
 __license__ = 'MIT'
