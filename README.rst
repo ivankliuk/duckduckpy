@@ -54,44 +54,56 @@ API description
 
 .. code-block:: python
 
-    >>> from duckduckpy import query
-    >>> help(query)
-    Help on function query in module duckduckpy.core:
-
     query(query_string, secure=False, container=u'namedtuple', verbose=False,
           user_agent=u'duckduckpy 0.1', no_redirect=False, no_html=False,
           skip_disambig=False)
 
-        Generates and sends a query to DuckDuckGo API.
+Generates and sends a query to DuckDuckGo API.
 
-        Args:
-            query_string: Query to be passed to DuckDuckGo API.
-            secure: Use secure SSL/TLS connection. Default - False.
-                Syntactic sugar is secure_query function which is passed the same
-                parameters.
-            container: Indicates how dict-like objects are serialized. There are
-               two possible options: namedtuple and dict. If 'namedtuple' is passed
-               the objects will be serialized to namedtuple instance of certain
-               class. If 'dict' is passed the objects won't be deserialized.
-               Default value: 'namedtuple'.
-            verbose: Don't raise any exception if error occurs.
-                Default value: False.
-            user_agent: User-Agent header of HTTP requests to DuckDuckGo API.
-                Default value: 'duckduckpy 0.1'
-            no_redirect: Skip HTTP redirects (for !bang commands).
-                Default value: False.
-            no_html: Remove HTML from text, e.g. bold and italics.
-                Default value: False.
-            skip_disambig: Skip disambiguation (D) Type. Default value: False.
+**Arguments:**
 
-        Raises:
-            DuckDuckDeserializeError: JSON serialization failed.
-            DuckDuckConnectionError: Something went wrong with httplib operation.
-            DuckDuckArgumentError: Passed argument is wrong.
++---------------+-------------------------------------------------------------+
+| query_string  | Query to be passed to DuckDuckGo API.                       |
++---------------+-------------------------------------------------------------+
+| secure        | Use secure SSL/TLS connection. Default - False.             |
+|               | Syntactic sugar is secure_query function which is passed    |
+|               | the same parameters.                                        |
++---------------+-------------------------------------------------------------+
+| container     | Indicates how dict-like objects are serialized. There are   |
+|               | two possible options: namedtuple and dict. If 'namedtuple'  |
+|               | is passed the objects will be serialized to namedtuple      |
+|               | instance of certain class. If 'dict' is passed the objects  |
+|               | won't be deserialized. Default value: 'namedtuple'.         |
++---------------+-------------------------------------------------------------+
+| verbose       | Don't raise any exception if error occurs.                  |
+|               | Default value: False.                                       |
++---------------+-------------------------------------------------------------+
+| user_agent    | User-Agent header of HTTP requests to DuckDuckGo API.       |
+|               | Default value: 'duckduckpy 0.1'                             |
++---------------+-------------------------------------------------------------+
+| no_redirect   | Skip HTTP redirects (for !bang commands).                   |
+|               | Default value: False.                                       |
++---------------+-------------------------------------------------------------+
+| no_html       | Remove HTML from text, e.g. bold and italics.               |
+|               | Default value: False.                                       |
++---------------+-------------------------------------------------------------+
+| skip_disambig | Skip disambiguation (D) Type. Default value: False.         |
++---------------+-------------------------------------------------------------+
 
-        Returns:
-            Container depends on container parameter. Each field in the response is
-            converted to the so-called snake case.
+**Raises:**
+
++--------------------------+--------------------------------------------------+
+| DuckDuckDeserializeError | JSON serialization failed.                       |
++--------------------------+--------------------------------------------------+
+| DuckDuckConnectionError  | Something went wrong with httplib operation.     |
++--------------------------+--------------------------------------------------+
+| DuckDuckArgumentError    | Passed argument is wrong.                        |
++--------------------------+--------------------------------------------------+
+
+**Returns:**
+
+Container depends on container parameter. Each field in the response is
+converted to the so-called snake case.
 
 Usage
 -----
