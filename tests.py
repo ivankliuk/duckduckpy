@@ -126,6 +126,11 @@ class TestURLAssembler(unittest.TestCase):
                             no_redirect=True, no_html=True, skip_disambig=True)
         self.assertEqual(url, expected)
 
+    def test_language_region(self):
+        expected = ("/?q=test+query&format=json&kl=ru-ru")
+        url = url_assembler("test query", lang="ru-ru")
+        self.assertEqual(url, expected)
+
 
 @mock.patch('duckduckpy.core.http_client.HTTPConnection.request')
 class TestQuery(unittest.TestCase):

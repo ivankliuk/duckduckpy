@@ -95,7 +95,7 @@ class Hook(object):
             "Unable to deserialize dict to an object")
 
 
-def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
+def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0, lang=None):
     """Assembler of parameters for building request query.
 
     Args:
@@ -103,6 +103,7 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
         no_redirect: Skip HTTP redirects (for !bang commands). Default - False.
         no_html: Remove HTML from text, e.g. bold and italics. Default - False.
         skip_disambig: Skip disambiguation (D) Type. Default - False.
+        lang: Override "us-en" language & region. Default - None.
 
     Returns:
         A “percent-encoded” string which is used as a part of the query.
@@ -115,13 +116,15 @@ def url_assembler(query_string, no_redirect=0, no_html=0, skip_disambig=0):
         params.append(('no_html', 1))
     if skip_disambig:
         params.append(('skip_disambig', 1))
+    if lang:
+        params.append(('kl', lang))
 
     return '/?' + urlencode(params)
 
 
 def query(query_string, secure=False, container='namedtuple', verbose=False,
           user_agent=api.USER_AGENT, no_redirect=False, no_html=False,
-          skip_disambig=False):
+          skip_disambig=False, lang=None):
     """
     Generates and sends a query to DuckDuckGo API.
 
@@ -144,6 +147,9 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
         no_html: Remove HTML from text, e.g. bold and italics.
             Default value: False.
         skip_disambig: Skip disambiguation (D) Type. Default value: False.
+
+        lang: Override "us-en" language & region. Default value: None
+            See https://duckduckgo.com/params
 
     Raises:
         DuckDuckDeserializeError: JSON serialization failed.
@@ -188,7 +194,8 @@ def query(query_string, secure=False, container='namedtuple', verbose=False,
         query_string,
         no_redirect=no_redirect,
         no_html=no_html,
-        skip_disambig=skip_disambig)
+        skip_disambig=skip_disambig,
+        lang=lang)
 
     if secure:
         conn = http_client.HTTPSConnection(api.SERVER_HOST)
