@@ -89,6 +89,8 @@ Generates and sends a query to DuckDuckGo API.
 +---------------+-------------------------------------------------------------+
 | skip_disambig | Skip disambiguation (D) Type. Default value: False.         |
 +---------------+-------------------------------------------------------------+
+| lang          | Override "us-en" language & region. Default - None.         |
++---------------+-------------------------------------------------------------+
 
 **Raises:**
 
